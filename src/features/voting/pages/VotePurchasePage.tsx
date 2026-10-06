@@ -1,300 +1,284 @@
-import { useMemo, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Info } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useCandidate, useSubmitVotePurchase, useVoteTiers } from "@/features/voting/api";
-import { voteQuantitySchema, digitsOnlyOnChange } from "@/lib/validation";
+import { ArrowLeft } from "lucide-react";
+import { Container, PageSection, StateMessage } from "@/shared/components";
+import { Button, Card, Input, Label, sonnerToast } from "@/shared/ui";
+import { digitsOnlyOnChange, voteQuantitySchema } from "@/lib/validation";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
+import { media } from "@/theme";
+import { useCandidate, useSubmitVotePurchase, useVoteTiers } from "@/features/voting/api";
+import { VOTE_PRICE_NAIRA } from "@/features/voting/data/vote-tiers";
+import {
+  ScoreDisclaimerBadge,
+  VoteTierPicker,
+  VotingCountdown,
+} from "@/features/voting/components";
+import { useVotingCountdown } from "@/features/voting/hooks";
+import type { VoteConfirmationState } from "@/features/voting/types";
 
-const PageWrap = styled.section`
-  padding: 120px 0 80px;
+const BackLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  color: ${({ theme }) => theme.colors.primary.DEFAULT};
+  font-size: 0.875rem;
+  font-weight: 700;
 `;
 
-const Container = styled.div`
-  width: min(960px, calc(100% - 32px));
-  margin: 0 auto;
+const CountdownWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: ${({ theme }) => theme.radii["2xl"]};
+  background: ${({ theme }) => theme.gradients.panel};
 `;
 
-const SummaryCard = styled.div`
+const CandidateSummary = styled(Card)`
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 18px;
-  border-radius: 22px;
-  background: ${({ theme }) => theme.colors.white};
-  border: 1px solid ${({ theme }) => theme.colors.border};
   margin-bottom: 24px;
-`;
+  padding: 16px;
 
-const CandidatePhoto = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 16px;
-`;
+  img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: ${({ theme }) => theme.radii["2xl"]};
+  }
 
-const CandidateMeta = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
+  h1 {
+    margin: 0;
+    font-family: ${({ theme }) => theme.fonts.display};
+    font-size: 1.35rem;
+    color: ${({ theme }) => theme.colors.primary.DEFAULT};
+  }
 
-const CandidateName = styled.h3`
-  margin: 0;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  gap: 24px;
-  grid-template-columns: 1fr;
-
-  @media (min-width: 900px) {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.9fr);
-    align-items: start;
+  p {
+    margin: 2px 0 0;
+    color: ${({ theme }) => theme.colors.muted.foreground};
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 `;
 
-const Panel = styled.div`
-  background: ${({ theme }) => theme.colors.white};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 24px;
-  padding: 24px;
-`;
-
-const TierGrid = styled.div`
+const Panel = styled(Card)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  gap: 20px;
+  padding: 24px;
+
+  ${media.md} {
+    padding: 32px;
+  }
 `;
 
-const TierButton = styled.button<{ $active: boolean }>`
-  padding: 16px 12px;
-  border-radius: 16px;
-  border: 1px solid ${({ theme, $active }) => ($active ? theme.colors.secondary.DEFAULT : theme.colors.border)};
-  background: ${({ theme, $active }) => ($active ? theme.alpha(theme.colors.secondary.DEFAULT, 0.08) : theme.colors.white)};
-  color: ${({ theme }) => theme.colors.foreground};
-  cursor: pointer;
-`;
-
-const TierValue = styled.div`
-  font-size: 1.1rem;
-  font-weight: 800;
-`;
-
-const TierPrice = styled.div`
-  margin-top: 6px;
-  color: ${({ theme }) => theme.colors.gray500};
-  font-size: 0.8rem;
-`;
-
-const FormField = styled.label`
-  display: block;
-  margin-top: 18px;
-`;
-
-const LabelText = styled.span`
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 700;
-`;
-
-const NumberInput = styled.input`
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: 14px;
-  height: 52px;
-  padding: 0 16px;
-  font-size: 1rem;
-`;
-
-const TotalBox = styled.div`
-  margin-top: 20px;
-  padding: 18px;
-  border-radius: 16px;
-  background: ${({ theme }) => theme.alpha(theme.colors.primary.DEFAULT, 0.05)};
-`;
-
-const TotalText = styled.p`
+const PanelTitle = styled.h2`
   margin: 0;
-  color: ${({ theme }) => theme.colors.foreground};
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 1.35rem;
 `;
 
-const Disclaimer = styled.div`
-  display: inline-flex;
-  align-items: center;
+const Field = styled.div`
+  display: grid;
   gap: 8px;
-  margin-top: 16px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.1)};
-  color: ${({ theme }) => theme.colors.primary.DEFAULT};
-  font-size: 0.78rem;
-  font-weight: 700;
 `;
 
-const SubmitButton = styled.button`
-  width: 100%;
-  margin-top: 20px;
-  border: 0;
-  border-radius: 999px;
-  background: ${({ theme }) => theme.colors.secondary.DEFAULT};
-  color: ${({ theme }) => theme.colors.secondary.foreground};
-  min-height: 52px;
-  font-size: 1rem;
-  font-weight: 800;
-  cursor: pointer;
-`;
-
-const ErrorText = styled.p`
-  margin-top: 10px;
+const FieldError = styled.p`
+  margin: 0;
   color: ${({ theme }) => theme.colors.destructive.DEFAULT};
+  font-size: 0.8125rem;
 `;
 
-type FormValues = {
+const Total = styled.div`
+  padding: 16px 18px;
+  border-radius: ${({ theme }) => theme.radii.xl};
+  background: ${({ theme }) => theme.alpha(theme.colors.primary.DEFAULT, 0.06)};
+  color: ${({ theme }) => theme.colors.primary.DEFAULT};
+  font-size: 1.15rem;
+`;
+
+const Rate = styled.p`
+  margin: 6px 0 0;
+  color: ${({ theme }) => theme.colors.muted.foreground};
+  font-size: 0.8125rem;
+`;
+
+const Checkout = styled.div`
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+
+  button {
+    width: 100%;
+  }
+`;
+
+interface FormValues {
   votes: number;
-};
+}
 
 export function VotePurchasePage() {
-  const { candidateId } = useParams();
+  const { candidateId = "" } = useParams();
   const navigate = useNavigate();
-  const { data: candidate } = useCandidate(candidateId ?? "");
+  const { data: candidate, isLoading, isError } = useCandidate(candidateId);
   const { data: tiers = [] } = useVoteTiers();
-  const submitMutation = useSubmitVotePurchase();
-  const [selectedTier, setSelectedTier] = useState<number | null>(null);
+  const purchase = useSubmitVotePurchase();
+  const { isOpen: votingOpen, isLoading: countdownLoading } = useVotingCountdown();
 
-  const form = useForm<FormValues>({
+  const {
+    register,
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
     resolver: zodResolver(voteQuantitySchema),
     defaultValues: { votes: 1 },
+    mode: "onChange",
   });
 
-  const currentVotes = form.watch("votes") || 0;
-  const totalCost = currentVotes * 100;
+  // The input yields a string at runtime (the resolver coerces it on submit),
+  // so normalise here. This single value drives both the tier highlight and
+  // the custom field, which keeps them in sync with no extra state.
+  const votes = Math.floor(Number(watch("votes"))) || 0;
+  const totalNaira = votes * VOTE_PRICE_NAIRA;
+  const isValidQuantity = votes > 0 && !errors.votes;
 
-  const tierSummary = useMemo(
-    () => tiers.find((tier) => tier.votes === currentVotes),
-    [tiers, currentVotes],
-  );
-
-  if (!candidate) {
-    return <PageWrap><Container><h2>Candidate not found</h2><Link to="/voting">Back to voting</Link></Container></PageWrap>;
+  if (isLoading) {
+    return (
+      <PageSection $clearHeader>
+        <Container $maxWidth={720}>
+          <StateMessage title="Loading…" />
+        </Container>
+      </PageSection>
+    );
   }
 
-  const handleTierSelect = (votes: number) => {
-    setSelectedTier(votes);
-    form.setValue("votes", votes, { shouldValidate: true });
-  };
+  if (!countdownLoading && !votingOpen) {
+    return (
+      <PageSection $clearHeader>
+        <Container $maxWidth={720}>
+          <StateMessage
+            title="Voting has closed"
+            message="The voting deadline has passed, so new votes can no longer be bought."
+            actionTo="/voting"
+            actionLabel="Back to voting"
+          />
+        </Container>
+      </PageSection>
+    );
+  }
 
-  const handleSubmit = async (values: FormValues) => {
-    if (!candidateId) return;
+  if (isError || !candidate) {
+    return (
+      <PageSection $clearHeader>
+        <Container $maxWidth={720}>
+          <StateMessage
+            title="Candidate not found"
+            message="We couldn't find the candidate you're trying to vote for."
+            actionTo="/voting"
+            actionLabel="Back to voting"
+          />
+        </Container>
+      </PageSection>
+    );
+  }
 
-    await submitMutation.mutateAsync({
-      candidateId,
-      votes: Number(values.votes),
-      amountNaira: Number(values.votes) * 100,
-    });
+  const onSubmit = handleSubmit(async (values) => {
+    const purchasedVotes = Number(values.votes);
+    const amountNaira = purchasedVotes * VOTE_PRICE_NAIRA;
 
-    navigate(`/voting/${candidateId}/vote/confirmation`, {
-      state: {
-        candidateId,
-        votes: Number(values.votes),
-        amountNaira: Number(values.votes) * 100,
-        candidateName: candidate.name,
-      },
-    });
-  };
+    try {
+      const result = await purchase.mutateAsync({
+        candidateId: candidate.id,
+        votes: purchasedVotes,
+        amountNaira,
+      });
+      const state: VoteConfirmationState = {
+        votes: result.votes,
+        amountNaira: result.amountNaira,
+        updatedVoteCount: result.updatedVoteCount,
+      };
+      navigate(`/voting/${candidate.id}/vote/confirmation`, { state });
+    } catch {
+      sonnerToast.error("Payment could not be completed. Please try again.");
+    }
+  });
 
   return (
-    <PageWrap>
-      <Container>
-        <SummaryCard>
-          <CandidatePhoto src={candidate.photo} alt={candidate.name} />
-          <CandidateMeta>
-            <CandidateName>{candidate.name}</CandidateName>
-            <span>{candidate.lga}</span>
-          </CandidateMeta>
-        </SummaryCard>
+    <PageSection $clearHeader>
+      <Container $maxWidth={720}>
+        <BackLink to={`/voting/${candidate.id}`}>
+          <ArrowLeft size={16} aria-hidden /> Back to {candidate.name}
+        </BackLink>
 
-        <Grid>
-          <Panel>
-            <h2>Choose your vote quantity</h2>
-            <TierGrid>
-              {tiers.map((tier) => (
-                <TierButton
-                  key={tier.votes}
-                  type="button"
-                  $active={selectedTier === tier.votes || (tierSummary && tierSummary.votes === tier.votes)}
-                  onClick={() => handleTierSelect(tier.votes)}
-                >
-                  <TierValue>{tier.votes} votes</TierValue>
-                  <TierPrice>{formatCurrency(tier.priceNaira)}</TierPrice>
-                </TierButton>
-              ))}
-            </TierGrid>
+        <CountdownWrap>
+          <VotingCountdown />
+        </CountdownWrap>
 
-            <FormField>
-              <LabelText>Custom quantity</LabelText>
-              <NumberInput
-                type="number"
-                min={1}
-                max={10000}
-                value={form.watch("votes")}
-                onChange={(event) => {
-                  const nextValue = digitsOnlyOnChange(event.target.value);
-                  const parsed = nextValue === "" ? 0 : Number(nextValue);
-                  setSelectedTier(null);
-                  form.setValue("votes", parsed, { shouldValidate: true });
-                }}
-              />
-            </FormField>
+        <CandidateSummary>
+          <img src={candidate.photo} alt="" />
+          <div>
+            <h1>{candidate.name}</h1>
+            <p>{candidate.lga}</p>
+          </div>
+        </CandidateSummary>
 
-            {form.formState.errors.votes && (
-              <ErrorText>{form.formState.errors.votes.message}</ErrorText>
-            )}
+        <Panel as="form" onSubmit={onSubmit} noValidate>
+          <PanelTitle>Choose how many votes</PanelTitle>
 
-            <TotalBox>
-              <TotalText>
-                {currentVotes} votes — {formatCurrency(totalCost)}
-              </TotalText>
-            </TotalBox>
+          <VoteTierPicker
+            tiers={tiers}
+            selectedVotes={votes}
+            onSelect={(next) => setValue("votes", next, { shouldValidate: true })}
+          />
 
-            <Disclaimer>
-              <Info size={13} />
-              Public votes count for 10% of the final score
-            </Disclaimer>
+          <Field>
+            <Label htmlFor="custom-votes">Or enter a custom number of votes</Label>
+            <Input
+              id="custom-votes"
+              inputMode="numeric"
+              autoComplete="off"
+              invalid={Boolean(errors.votes)}
+              {...register("votes", {
+                onChange: (event) => {
+                  event.target.value = digitsOnlyOnChange(event.target.value);
+                },
+              })}
+            />
+            {errors.votes && <FieldError role="alert">{errors.votes.message}</FieldError>}
+          </Field>
 
-            <SubmitButton
-              type="button"
-              onClick={form.handleSubmit(handleSubmit)}
-              disabled={submitMutation.isPending}
+          <div>
+            <Total aria-live="polite">
+              <strong>
+                {formatNumber(votes)} {votes === 1 ? "vote" : "votes"} —{" "}
+                {formatCurrency(totalNaira)}
+              </strong>
+            </Total>
+            <Rate>{formatCurrency(VOTE_PRICE_NAIRA)} per vote</Rate>
+          </div>
+
+          <Checkout>
+            {/* <ScoreDisclaimerBadge /> */}
+            <Button
+              type="submit"
+              size="lg"
+              variant="secondary"
+              disabled={!isValidQuantity || purchase.isPending}
             >
-              {submitMutation.isPending ? "Redirecting to payment…" : "Proceed to Pay"}
-            </SubmitButton>
-          </Panel>
-
-          <Panel>
-            <h3>Payment summary</h3>
-            <p style={{ color: "#6B7280" }}>Your vote purchase for {candidate.name} will be charged at ₦100 per vote.</p>
-            <div style={{ display: "grid", gap: 12, marginTop: 20 }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>Votes</span>
-                <strong>{formatNumber(currentVotes)}</strong>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>Rate</span>
-                <strong>₦100.00 each</strong>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>Total</span>
-                <strong>{formatCurrency(totalCost)}</strong>
-              </div>
-            </div>
-          </Panel>
-        </Grid>
+              {purchase.isPending ? "Redirecting to payment…" : "Proceed to Pay"}
+            </Button>
+          </Checkout>
+        </Panel>
       </Container>
-    </PageWrap>
+    </PageSection>
   );
 }

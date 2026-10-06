@@ -1,3 +1,5 @@
+import { format, parseISO } from "date-fns";
+
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat("en-NG", {
     style: "currency",
@@ -12,9 +14,5 @@ export function formatNumber(value: number): string {
 }
 
 export function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("en-NG", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(value));
+  return format(parseISO(value), "d MMM yyyy");
 }

@@ -2,6 +2,18 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { media } from "@/theme";
 
+export const TOP_BAR_HEIGHT = 40;
+const MAIN_LOGO_HEIGHT_MOBILE = 40;
+const MAIN_LOGO_HEIGHT_DESKTOP = 48;
+const MAIN_BAR_PADDING = 10;
+
+// Total fixed-header height (top strip + main nav row), used to offset page
+// content in app/providers.tsx. Derived from the same numbers that size the
+// bars so they can't drift apart.
+export const HEADER_HEIGHT_MOBILE = TOP_BAR_HEIGHT + MAIN_BAR_PADDING * 2 + MAIN_LOGO_HEIGHT_MOBILE;
+export const HEADER_HEIGHT_DESKTOP =
+  TOP_BAR_HEIGHT + MAIN_BAR_PADDING * 2 + MAIN_LOGO_HEIGHT_DESKTOP;
+
 // Fixed frame for the whole header stack (disclaimer strip + nav bar) —
 // the strip lives inside this, as a normal-flow first child, rather than
 // as its own independently-fixed element, so the two never need
@@ -17,8 +29,141 @@ export const HeaderFrame = styled.header`
   right: 0;
 `;
 
+// Slim government strip above the main nav: state crest + ARISE logo and the
+// commission name on the left, the Mbopo Portal button on the right.
+export const TopBar = styled.div`
+  background: ${({ theme }) => theme.colors.primary.DEFAULT};
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+export const TopBarInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: min(1200px, calc(100% - 32px));
+  height: ${TOP_BAR_HEIGHT}px;
+  margin: 0 auto;
+`;
+
+export const GovCluster = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+`;
+
+export const GovLogos = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+
+  a {
+    display: flex;
+  }
+`;
+
+export const GovLogo = styled.img`
+  display: block;
+  width: auto;
+  height: 28px;
+  max-width: 80px;
+  object-fit: contain;
+`;
+
+export const GovName = styled.span`
+  display: none;
+  overflow: hidden;
+  padding-left: 10px;
+  border-left: 1px solid ${({ theme }) => theme.alpha(theme.colors.white, 0.3)};
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  ${media.sm} {
+    display: block;
+  }
+
+  ${media.md} {
+    font-size: 11px;
+  }
+`;
+
+export const PortalButton = styled.a`
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 28px;
+  padding: 0 14px;
+  border-radius: ${({ theme }) => theme.radii.full};
+  background: ${({ theme }) => theme.colors.secondary.DEFAULT};
+  color: ${({ theme }) => theme.colors.secondary.foreground};
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    transform ${({ theme }) => theme.transitions.fast},
+    background-color ${({ theme }) => theme.transitions.fast};
+
+  &:hover {
+    transform: translateY(-1px);
+    background: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.9)};
+  }
+`;
+
+export const MbopoBrand = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 0 0 auto;
+`;
+
+export const MbopoLogo = styled.img`
+  display: block;
+  width: auto;
+  height: ${MAIN_LOGO_HEIGHT_MOBILE}px;
+  max-width: 140px;
+  object-fit: contain;
+
+  ${media.md} {
+    height: ${MAIN_LOGO_HEIGHT_DESKTOP}px;
+  }
+`;
+
+export const MbopoName = styled.span`
+  display: none;
+  flex-direction: column;
+  gap: 1px;
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: ${({ theme }) => theme.colors.primary.DEFAULT};
+
+  small {
+    font-family: ${({ theme }) => theme.fonts.sans};
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: ${({ theme }) => theme.colors.muted.foreground};
+  }
+
+  ${media.sm} {
+    display: flex;
+  }
+`;
+
 export const HeaderBar = styled.div<{ $scrolled: boolean }>`
-  padding: 14px 0;
+  padding: ${MAIN_BAR_PADDING}px 0;
   background: ${({ theme, $scrolled }) => ($scrolled ? theme.alpha(theme.colors.background, 0.94) : "transparent")};
   box-shadow: ${({ $scrolled }) => ($scrolled ? "0 3px 24px rgba(11, 73, 35, 0.1)" : "none")};
   backdrop-filter: blur(12px);
@@ -34,75 +179,6 @@ export const Bar = styled.nav`
   width: min(1200px, calc(100% - 32px));
   margin: 0 auto;
   gap: 16px;
-`;
-
-export const BrandCluster = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-`;
-
-export const LogoCluster = styled.div`
-  display: flex;
-  gap: 7px;
-  align-items: center;
-  flex: 0 0 auto;
-`;
-
-export const LogoImage = styled.img`
-  display: block;
-  width: auto;
-  height: 46px;
-  max-width: 130px;
-  object-fit: contain;
-  flex: 0 0 auto;
-
-  ${media.md} {
-    height: 56px;
-  }
-`;
-
-export const BrandDivider = styled.span<{ $light: boolean }>`
-  display: none;
-  flex: 0 0 auto;
-  width: 1px;
-  height: 34px;
-  background: ${({ theme, $light }) => ($light ? "rgba(255, 255, 255, 0.3)" : theme.colors.border)};
-
-  ${media.xl} {
-    display: block;
-  }
-`;
-
-// Portal name + commission line — matches the reference's own
-// "hidden until there's genuinely room" treatment: two lines of real
-// text (the second one long) need real width, so this only shows at
-// xl+, never fights the nav links for space below that.
-export const BrandText = styled.div`
-  display: none;
-  flex-direction: column;
-  gap: 1px;
-  min-width: 0;
-  max-width: 190px;
-
-  ${media.xl} {
-    display: flex;
-  }
-`;
-
-export const BrandName = styled.span<{ $light: boolean }>`
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: ${({ theme, $light }) => ($light ? theme.colors.white : theme.colors.foreground)};
-`;
-
-export const BrandSubtitle = styled.span<{ $light: boolean }>`
-  font-size: clamp(8.5px, 0.7vw, 9.5px);
-  font-weight: 500;
-  line-height: 1.3;
-  color: ${({ $light }) => ($light ? "rgba(255, 255, 255, 0.62)" : "rgba(107, 114, 128, 0.9)")};
 `;
 
 export const RightCluster = styled.div`
@@ -180,61 +256,6 @@ export const NavAnchor = styled(Link)<{ $light: boolean; $active?: boolean }>`
 
   &:hover::after {
     transform: translateX(-50%) scaleX(1);
-  }
-`;
-
-export const CtaLink = styled(Link)`
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 9px;
-  padding: 11px 18px;
-  border-radius: ${({ theme }) => theme.radii.full};
-  color: ${({ theme }) => theme.colors.secondary.foreground};
-  background: ${({ theme }) => theme.colors.secondary.DEFAULT};
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  box-shadow: 0 9px 22px
-    ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.3)};
-  transition:
-    transform ${({ theme }) => theme.transitions.fast},
-    background-color ${({ theme }) => theme.transitions.fast};
-
-  &:hover {
-    transform: translateY(-2px);
-    background: ${({ theme }) => theme.alpha(theme.colors.secondary.DEFAULT, 0.9)};
-  }
-
-  @media (max-width: 1023px) {
-    display: none;
-  }
-`;
-
-export const SignInLink = styled(Link)<{ $light: boolean }>`
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  padding: 10px 18px;
-  border: 1px solid
-    ${({ theme, $light }) => ($light ? "rgba(255, 255, 255, 0.45)" : theme.colors.border)};
-  border-radius: ${({ theme }) => theme.radii.full};
-  color: ${({ theme, $light }) => ($light ? theme.colors.white : theme.colors.foreground)};
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: background-color ${({ theme }) => theme.transitions.fast};
-
-  &:hover {
-    background: ${({ theme, $light }) => ($light ? "rgba(255, 255, 255, 0.12)" : theme.colors.muted.DEFAULT)};
-  }
-
-  @media (max-width: 1023px) {
-    display: none;
   }
 `;
 
@@ -338,18 +359,6 @@ export const MobileDrawerActions = styled.div`
   gap: 10px;
   padding: 16px 18px 20px;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
-`;
-
-export const MobileSignInLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radii.full};
-  color: ${({ theme }) => theme.colors.foreground};
-  font-size: 13px;
-  font-weight: 700;
 `;
 
 export const MobileCtaLink = styled(Link)`

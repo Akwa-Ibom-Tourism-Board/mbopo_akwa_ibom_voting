@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ElementRef,
-} from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from "react";
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { StyledRoot, StyledThumb } from "./Switch.styles";
 

@@ -24,16 +24,15 @@ export const ToastViewport = forwardRef<
 >((props, ref) => <StyledViewport ref={ref} {...props} />);
 ToastViewport.displayName = "ToastViewport";
 
-export type ToastProps = ComponentPropsWithoutRef<
-  typeof ToastPrimitives.Root
-> & { variant?: ToastVariant };
+export type ToastProps = ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & {
+  variant?: ToastVariant;
+};
 
-export const Toast = forwardRef<
-  ElementRef<typeof ToastPrimitives.Root>,
-  ToastProps
->(({ variant = "default", ...props }, ref) => (
-  <StyledToast ref={ref} $variant={variant} {...props} />
-));
+export const Toast = forwardRef<ElementRef<typeof ToastPrimitives.Root>, ToastProps>(
+  ({ variant = "default", ...props }, ref) => (
+    <StyledToast ref={ref} $variant={variant} {...props} />
+  ),
+);
 Toast.displayName = "Toast";
 
 export const ToastAction = forwardRef<

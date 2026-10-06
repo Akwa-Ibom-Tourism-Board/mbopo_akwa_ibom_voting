@@ -19,8 +19,7 @@ export const StyledSlot = styled.div<{ $active: boolean }>`
   width: 2.75rem;
   height: 3.25rem;
   border-radius: ${({ theme }) => theme.radii.md};
-  border: 1px solid
-    ${({ theme, $active }) => ($active ? theme.colors.ring : theme.colors.input)};
+  border: 1px solid ${({ theme, $active }) => ($active ? theme.colors.ring : theme.colors.input)};
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.foreground};
   font-size: 1.25rem;

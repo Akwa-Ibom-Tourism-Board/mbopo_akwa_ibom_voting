@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ElementRef,
-} from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";
 import { StyledCheckbox, StyledIndicator } from "./Checkbox.styles";

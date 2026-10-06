@@ -1,42 +1,48 @@
 import styled from "styled-components";
 import { Link, useParams } from "react-router-dom";
-import { usePictureNewsItem } from "@/features/picture-news/api";
+import { ArrowLeft } from "lucide-react";
+import { Container, PageSection, StateMessage } from "@/shared/components";
 import { formatDate } from "@/lib/formatters";
+import { usePictureNewsItem } from "@/features/picture-news/api";
+import { NewsGallery } from "@/features/picture-news/components";
 
-const PageWrap = styled.section`
-  padding: 120px 0 80px;
+const BackLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  color: ${({ theme }) => theme.colors.primary.DEFAULT};
+  font-size: 0.875rem;
+  font-weight: 700;
 `;
 
-const Container = styled.div`
-  width: min(1000px, calc(100% - 32px));
-  margin: 0 auto;
-`;
-
-const HeroImage = styled.img`
+const Hero = styled.img`
   width: 100%;
-  height: 420px;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 22px;
-  display: block;
+  object-position: top;
+  border-radius: ${({ theme }) => theme.radii["2xl"]};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
 `;
 
-const Body = styled.article`
+const Article = styled.article`
   margin-top: 32px;
 `;
 
-const Title = styled.h1`
-  margin: 0 0 12px;
-  font-size: clamp(2.2rem, 4vw, 3.5rem);
-  line-height: 1.1;
-  color: ${({ theme }) => theme.colors.foreground};
+const PublishedAt = styled.time`
+  color: ${({ theme }) => theme.colors.secondary.DEFAULT};
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 `;
 
-const Meta = styled.p`
-  margin: 0 0 24px;
-  color: ${({ theme }) => theme.colors.muted.foreground};
-  font-size: 0.86rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+const Title = styled.h1`
+  margin: 8px 0 24px;
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: clamp(1.9rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  color: ${({ theme }) => theme.colors.primary.DEFAULT};
 `;
 
 const Paragraph = styled.p`
@@ -46,69 +52,60 @@ const Paragraph = styled.p`
   line-height: 1.9;
 `;
 
-const Gallery = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 28px;
-`;
-
-const GalleryImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 16px;
-  display: block;
-`;
-
-const BackLink = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 20px;
-  color: ${({ theme }) => theme.colors.primary.DEFAULT};
-  font-weight: 700;
+const GallerySection = styled.section`
+  margin-top: 40px;
 `;
 
 export function PictureNewsDetailPage() {
-  const { id } = useParams();
-  const { data, isLoading, isError } = usePictureNewsItem(id ?? "");
+  const { id = "" } = useParams();
+  const { data: item, isLoading, isError } = usePictureNewsItem(id);
 
   if (isLoading) {
-    return <PageWrap><Container><p>Loading story...</p></Container></PageWrap>;
+    return (
+      <PageSection $clearHeader>
+        <Container $maxWidth={820}>
+          <StateMessage title="Loading story…" />
+        </Container>
+      </PageSection>
+    );
   }
 
-  if (isError || !data) {
+  if (isError || !item) {
     return (
-      <PageWrap>
-        <Container>
-          <BackLink to="/picture-news">← Back to picture news</BackLink>
-          <h2>Story not found</h2>
+      <PageSection $clearHeader>
+        <Container $maxWidth={720}>
+          <StateMessage
+            title="Story not found"
+            message="This story doesn't exist or has been removed."
+            actionTo="/picture-news"
+            actionLabel="Back to Photo News"
+          />
         </Container>
-      </PageWrap>
+      </PageSection>
     );
   }
 
   return (
-    <PageWrap>
-      <Container>
-        <BackLink to="/picture-news">← Back to picture news</BackLink>
-        <HeroImage src={data.coverImage} alt={data.title} />
-        <Body>
-          <Meta>{formatDate(data.publishedAt)}</Meta>
-          <Title>{data.title}</Title>
-          {data.body.map((paragraph, index) => (
-            <Paragraph key={`${data.id}-paragraph-${index}`}>{paragraph}</Paragraph>
+    <PageSection $clearHeader>
+      <Container $maxWidth={820}>
+        <BackLink to="/picture-news">
+          <ArrowLeft size={16} aria-hidden /> Back to Photo News
+        </BackLink>
+        <Hero src={item.coverImage} alt={item.title} />
+        <Article>
+          <PublishedAt dateTime={item.publishedAt}>{formatDate(item.publishedAt)}</PublishedAt>
+          <Title>{item.title}</Title>
+          {item.body.map((paragraph) => (
+            <Paragraph key={paragraph}>{paragraph}</Paragraph>
           ))}
-        </Body>
+        </Article>
 
-        {data.images && data.images.length > 0 && (
-          <Gallery>
-            {data.images.map((image, index) => (
-              <GalleryImage key={`${data.id}-image-${index}`} src={image} alt={`${data.title} gallery ${index + 1}`} />
-            ))}
-          </Gallery>
+        {item.images && item.images.length > 1 && (
+          <GallerySection>
+            <NewsGallery images={item.images} title={item.title} />
+          </GallerySection>
         )}
       </Container>
-    </PageWrap>
+    </PageSection>
   );
 }

@@ -7,12 +7,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ invalid = false, ...props }, ref) => (
-    <StyledInput
-      ref={ref}
-      $invalid={invalid}
-      aria-invalid={invalid || undefined}
-      {...props}
-    />
+    <StyledInput ref={ref} $invalid={invalid} aria-invalid={invalid || undefined} {...props} />
   ),
 );
 Input.displayName = "Input";

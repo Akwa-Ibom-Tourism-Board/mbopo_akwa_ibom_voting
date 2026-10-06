@@ -1,14 +1,23 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MOCK_CANDIDATES } from "@/features/voting/data/mock-candidates";
-import type { Candidate, VotePurchase, VoteTier } from "@/features/voting/types";
-import { VOTE_TIERS } from "@/features/voting/data/vote-tiers";
+import { VOTING_DEADLINE_ISO } from "@/features/voting/data/voting-deadline";
+import { VOTE_PRICE_NAIRA, VOTE_TIERS } from "@/features/voting/data/vote-tiers";
+import type {
+  Candidate,
+  VotePurchase,
+  VotePurchaseResult,
+  VoteTier,
+  VotingOverview,
+} from "@/features/voting/types";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function getCandidates(params?: {
+export interface CandidateFilters {
   search?: string;
   lga?: string;
-}): Promise<Candidate[]> {
+}
+
+export async function getCandidates(params?: CandidateFilters): Promise<Candidate[]> {
   await delay(300);
   const search = params?.search?.trim().toLowerCase() ?? "";
   const lga = params?.lga?.trim() ?? "";
@@ -23,9 +32,29 @@ export async function getCandidates(params?: {
   });
 }
 
-export async function getCandidate(id: string): Promise<Candidate | undefined> {
+export async function getCandidate(id: string): Promise<Candidate | null> {
   await delay(250);
-  return MOCK_CANDIDATES.find((candidate) => candidate.id === id);
+  return MOCK_CANDIDATES.find((candidate) => candidate.id === id) ?? null;
+}
+
+export async function getVotingOverview(): Promise<VotingOverview> {
+  await delay(200);
+  const totalVotes = MOCK_CANDIDATES.reduce((sum, candidate) => sum + candidate.voteCount, 0);
+  const leaderboard = [...MOCK_CANDIDATES]
+    .sort((a, b) => b.voteCount - a.voteCount)
+    .map((candidate, index) => ({
+      rank: index + 1,
+      candidate,
+      percent: totalVotes ? (candidate.voteCount / totalVotes) * 100 : 0,
+    }));
+
+  return {
+    deadline: VOTING_DEADLINE_ISO,
+    pricePerVote: VOTE_PRICE_NAIRA,
+    candidateCount: MOCK_CANDIDATES.length,
+    totalVotes,
+    leaderboard,
+  };
 }
 
 export async function getVoteTiers(): Promise<VoteTier[]> {
@@ -33,44 +62,42 @@ export async function getVoteTiers(): Promise<VoteTier[]> {
   return [...VOTE_TIERS];
 }
 
+// TODO(payment-integration): replace this simulated flow with a real
+// redirect to the payment gateway (Paystack/Flutterwave are the standard
+// choice for NGN) and a server-confirmed vote credit once the backend
+// exists. Today: wait ~1s (the "Redirecting to payment…" state), pretend the
+// payment succeeded, and credit the votes in the local mock store.
 export async function submitVotePurchase({
   candidateId,
   votes,
   amountNaira,
-}: VotePurchase): Promise<{
-  success: true;
-  candidateId: string;
-  votes: number;
-  amountNaira: number;
-  updatedVoteCount: number;
-}> {
+}: VotePurchase): Promise<VotePurchaseResult> {
   await delay(1000);
 
-  const index = MOCK_CANDIDATES.findIndex((candidate) => candidate.id === candidateId);
-  if (index === -1) {
+  if (amountNaira !== votes * VOTE_PRICE_NAIRA) {
+    throw new Error("Payment amount does not match the number of votes");
+  }
+
+  const candidate = MOCK_CANDIDATES.find((item) => item.id === candidateId);
+  if (!candidate) {
     throw new Error("Candidate not found");
   }
 
-  const updatedCandidate = {
-    ...MOCK_CANDIDATES[index],
-    voteCount: MOCK_CANDIDATES[index].voteCount + votes,
-  };
-
-  MOCK_CANDIDATES[index] = updatedCandidate;
+  candidate.voteCount += votes;
 
   return {
-    success: true,
     candidateId,
     votes,
     amountNaira,
-    updatedVoteCount: updatedCandidate.voteCount,
+    updatedVoteCount: candidate.voteCount,
   };
 }
 
-export function useCandidates(params?: { search?: string; lga?: string }) {
+export function useCandidates(params?: CandidateFilters) {
   return useQuery({
     queryKey: ["candidates", params],
     queryFn: () => getCandidates(params),
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -82,6 +109,13 @@ export function useCandidate(id: string) {
   });
 }
 
+export function useVotingOverview() {
+  return useQuery({
+    queryKey: ["voting-overview"],
+    queryFn: getVotingOverview,
+  });
+}
+
 export function useVoteTiers() {
   return useQuery({
     queryKey: ["vote-tiers"],
@@ -90,7 +124,15 @@ export function useVoteTiers() {
 }
 
 export function useSubmitVotePurchase() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: submitVotePurchase,
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["candidates"] }),
+        queryClient.invalidateQueries({ queryKey: ["candidate"] }),
+        queryClient.invalidateQueries({ queryKey: ["voting-overview"] }),
+      ]),
   });
 }

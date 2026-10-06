@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ElementRef,
-} from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import styled from "styled-components";
 

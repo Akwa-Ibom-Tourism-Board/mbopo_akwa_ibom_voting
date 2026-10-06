@@ -1,10 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { Slot } from "@radix-ui/react-slot";
-import {
-  StyledButton,
-  type ButtonVariant,
-  type ButtonSize,
-} from "./Button.styles";
+import { StyledButton, type ButtonVariant, type ButtonSize } from "./Button.styles";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -13,10 +9,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { variant = "default", size = "default", asChild = false, ...props },
-    ref,
-  ) => (
+  ({ variant = "default", size = "default", asChild = false, ...props }, ref) => (
     <StyledButton
       as={asChild ? Slot : "button"}
       $variant={variant}

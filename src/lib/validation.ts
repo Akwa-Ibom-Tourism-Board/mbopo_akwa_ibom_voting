@@ -8,5 +8,4 @@ export const voteQuantitySchema = z.object({
     .max(10000, "Maximum is 10,000 votes"),
 });
 
-export const digitsOnlyOnChange = (value: string): string =>
-  value.replace(/\D/g, "");
+export const digitsOnlyOnChange = (value: string): string => value.replace(/\D/g, "");

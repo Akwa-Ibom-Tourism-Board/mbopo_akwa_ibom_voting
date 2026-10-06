@@ -1,19 +1,25 @@
 import { useEffect, useState } from "react";
 import { ChevronRight, Menu, X } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
+import mbopoLogo from "@/assets/mbopo-logo.webp";
+import { MAIN_SITE_URL } from "@/lib/constants";
 import {
   HeaderFrame,
+  TopBar,
+  TopBarInner,
+  GovCluster,
+  GovLogos,
+  GovLogo,
+  GovName,
+  PortalButton,
   HeaderBar,
   NavOverlay,
   Bar,
-  BrandCluster,
-  LogoCluster,
-  LogoImage,
-  BrandDivider,
-  BrandText,
-  BrandSubtitle,
+  MbopoBrand,
+  MbopoLogo,
+  MbopoName,
   RightCluster,
   NavLinks,
   NavAnchor,
@@ -32,13 +38,13 @@ export interface NavbarProps {
 }
 
 const NAV_ITEMS = [
-  { to: "/picture-news", label: "Picture News" },
+  { to: "/picture-news", label: "Photo News" },
   { to: "/voting", label: "Voting" },
-  { to: "/sponsors", label: "Sponsors" },
+  { to: "/sponsors", label: "Partners" },
 ];
 
 function isNavActive(to: string, pathname: string): boolean {
-  return pathname === to;
+  return pathname === to || pathname.startsWith(`${to}/`);
 }
 
 export function Navbar({ variant = "solid" }: NavbarProps) {
@@ -61,24 +67,32 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
     <>
       <NavOverlay $visible={menuOpen} aria-label="Close menu" onClick={closeMenu} />
       <HeaderFrame>
+        <TopBar>
+          <TopBarInner>
+            <GovCluster>
+              <GovLogos>
+                <Link to="/" aria-label="Mbopo Akwa Ibom home">
+                  <GovLogo src={akwaIbomLogo} alt="Akwa Ibom State Government crest" />
+                </Link>
+                <Link to="/" aria-label="Mbopo Akwa Ibom home">
+                  <GovLogo src={ariseLogo} alt="ARISE Akwa Ibom logo" />
+                </Link>
+              </GovLogos>
+              <GovName>Akwa Ibom State Hotels and Tourism Development Commission</GovName>
+            </GovCluster>
+            <PortalButton href={MAIN_SITE_URL}>Mbopo Portal</PortalButton>
+          </TopBarInner>
+        </TopBar>
+
         <HeaderBar $scrolled={scrolled}>
           <Bar>
-            <BrandCluster>
-              <LogoCluster>
-                <a href="/" aria-label="Mbopo Akwa Ibom home">
-                  <LogoImage src={akwaIbomLogo} alt="Akwa Ibom State Government logo" />
-                </a>
-                <a href="/" aria-label="Mbopo Akwa Ibom home">
-                  <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
-                </a>
-              </LogoCluster>
-              <BrandDivider $light={light} aria-hidden />
-              <BrandText>
-                <BrandSubtitle $light={light}>
-                  Akwa Ibom State Hotels and Tourism Development Commission
-                </BrandSubtitle>
-              </BrandText>
-            </BrandCluster>
+            <MbopoBrand to="/" aria-label="Mbopo Akwa Ibom home">
+              <MbopoLogo src={mbopoLogo} alt="Mbopo Akwa Ibom logo" />
+              <MbopoName>
+                Mbopo Akwa Ibom
+                <small>Beauty with Purpose</small>
+              </MbopoName>
+            </MbopoBrand>
 
             <NavLinks>
               {NAV_ITEMS.map(({ to, label }) => (
@@ -109,16 +123,9 @@ export function Navbar({ variant = "solid" }: NavbarProps) {
 
       <MobileDrawer $open={menuOpen}>
         <MobileDrawerHeader>
-          <BrandCluster>
-            <LogoCluster>
-              <a href="/" aria-label="Mbopo Akwa Ibom home">
-                <LogoImage src={akwaIbomLogo} alt="Akwa Ibom State Government logo" />
-              </a>
-              <a href="/" aria-label="Mbopo Akwa Ibom home">
-                <LogoImage src={ariseLogo} alt="ARISE Akwa Ibom logo" />
-              </a>
-            </LogoCluster>
-          </BrandCluster>
+          <MbopoBrand to="/" aria-label="Mbopo Akwa Ibom home" onClick={closeMenu}>
+            <MbopoLogo src={mbopoLogo} alt="Mbopo Akwa Ibom logo" />
+          </MbopoBrand>
           <MobileDrawerClose type="button" aria-label="Close menu" onClick={closeMenu}>
             <X size={18} />
           </MobileDrawerClose>

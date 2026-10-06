@@ -1,0 +1,1 @@
+export { SponsorGrid } from "./SponsorGrid";

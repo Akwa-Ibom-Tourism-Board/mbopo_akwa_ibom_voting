@@ -3,6 +3,7 @@ import { Phone } from "lucide-react";
 import akwaIbomLogo from "@/assets/akwa-ibom-logo-main.png";
 import ariseLogo from "@/assets/arise-logo-main.png";
 import mbopoLogo from "@/assets/mbopo-logo-dark.webp";
+import { MAIN_SITE_URL } from "@/lib/constants";
 import {
   FooterFrame,
   FooterTop,
@@ -19,8 +20,6 @@ import {
   FooterBottom,
 } from "./Footer.styles";
 
-const MAIN_SITE_URL = "https://example.com";
-
 export function Footer() {
   return (
     <FooterFrame>
@@ -33,9 +32,7 @@ export function Footer() {
           <LogoRow>
             <LogoImage src={mbopoLogo} alt="Mbopo Akwa Ibom logo" />
           </LogoRow>
-          <FooterAgency>
-            Akwa Ibom State Hotels &amp; Tourism Development Commission
-          </FooterAgency>
+          <FooterAgency>Akwa Ibom State Hotels &amp; Tourism Development Commission</FooterAgency>
           <FooterSubline>
             Akwa Ibom State Government
             <br />
@@ -60,9 +57,9 @@ export function Footer() {
         <div>
           <ColumnHeading>Explore</ColumnHeading>
           <ColumnLinks>
-            <Link to="/picture-news">Picture News</Link>
+            <Link to="/picture-news">Photo News</Link>
             <Link to="/voting">Voting</Link>
-            <Link to="/sponsors">Sponsors</Link>
+            <Link to="/sponsors">Partners</Link>
           </ColumnLinks>
         </div>
 

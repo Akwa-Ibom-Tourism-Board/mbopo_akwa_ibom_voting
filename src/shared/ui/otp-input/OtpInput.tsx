@@ -1,9 +1,4 @@
-import {
-  forwardRef,
-  useContext,
-  type ComponentPropsWithoutRef,
-  type ElementRef,
-} from "react";
+import { forwardRef, useContext, type ComponentPropsWithoutRef, type ElementRef } from "react";
 import { OTPInput, OTPInputContext } from "input-otp";
 import { StyledGroup, StyledSlot, StyledCaret } from "./OtpInput.styles";
 

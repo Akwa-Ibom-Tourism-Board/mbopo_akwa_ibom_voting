@@ -9,13 +9,7 @@ const RevealFrame = styled.div<{ $visible: boolean; $delay: number }>`
     transform 800ms ease ${({ $delay }) => $delay}ms;
 `;
 
-export function Reveal({
-  children,
-  delay = 0,
-}: {
-  children: ReactNode;
-  delay?: number;
-}) {
+export function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 

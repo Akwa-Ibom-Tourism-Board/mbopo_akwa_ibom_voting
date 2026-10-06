@@ -1,4 +1,14 @@
 import type { Candidate } from "@/features/voting/types";
+import etim from "@/assets/woman_1.webp";
+import mfon from "@/assets/woman_2.webp";
+import edima from "@/assets/woman_3.webp";
+import nse from "@/assets/woman_4.webp";
+import idara from "@/assets/woman_5.webp";
+import patience from "@/assets/woman_6.webp";
+import blessing from "@/assets/woman-2-hero.webp";
+import victoria from "@/assets/mbopo-hero-local-hair.webp";
+import stageShot from "@/assets/mbopo-hero-1.webp";
+import groupShot from "@/assets/hero-bg.webp";
 
 export const AKWA_IBOM_LGAS = [
   "Abak",
@@ -36,193 +46,122 @@ export const AKWA_IBOM_LGAS = [
 
 export const MOCK_CANDIDATES: Candidate[] = [
   {
-    id: "ada-ayo",
-    name: "Ada Ayo",
+    id: "blessing-etim",
+    number: 1,
+    name: "Blessing Etim",
     lga: "Uyo",
     tagline: "Culture advocate and community storyteller",
-    photo:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
-    ],
+    photo: etim,
+    gallery: [stageShot, groupShot],
     videoUrls: ["https://www.youtube.com/embed/ScMzIvxBSi4"],
     story: [
-      "Ada Ayo has spent years nurturing cultural storytelling through creative community work, bringing local history and aspiration closer to young people across the state.",
-      "She is known for her practical approach to public engagement, balancing heritage, innovation, and the everyday realities of community life. Her work continues to bring attention to arts, culture, and the role youth leadership can play in tourism and civic pride.",
+      "Blessing Etim has spent years nurturing cultural storytelling through creative community work, bringing local history and aspiration closer to young people across the state.",
+      "She is known for a practical approach to public engagement, balancing heritage, innovation, and the everyday realities of community life. Her work continues to bring attention to arts, culture, and the role youth leadership can play in tourism and civic pride.",
     ],
     voteCount: 12840,
     publicVoteWeightPercent: 10,
   },
   {
     id: "mfon-essien",
+    number: 2,
     name: "Mfon Essien",
     lga: "Eket",
-    tagline: "Hospitality champion and destination builder",
-    photo:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1200&q=80",
-    ],
+    tagline: "Heritage tourism ambassador",
+    photo: mfon,
+    gallery: [groupShot],
     story: [
-      "Mfon Essien has built a brand around hospitality, guest experience, and authentic local welcome, helping the state present itself more confidently as a destination of choice.",
-      "Her public work emphasizes collaboration, service quality, and destination storytelling that connects local communities with tourism growth."
+      "Mfon Essien grew up along the Eket coastline and has made it her mission to introduce visitors to the state's waterways, markets, and living traditions.",
+      "She volunteers as a guide during cultural festivals and mentors teenage girls in hospitality and public speaking.",
     ],
     voteCount: 10120,
     publicVoteWeightPercent: 10,
   },
   {
-    id: "samuel-emem",
-    name: "Samuel Emem",
+    id: "edima-udoh",
+    number: 3,
+    name: "Edima Udoh",
     lga: "Ikot Ekpene",
-    tagline: "Creative entrepreneur and local pride advocate",
-    photo:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=1200&q=80",
-    ],
+    tagline: "Master weaver and raffia-craft champion",
+    photo: edima,
+    gallery: [stageShot],
     story: [
-      "Samuel Emem brings together business energy and community connection in a way that makes cultural heritage feel both contemporary and deeply relevant.",
-      "He has supported community-driven events and creative partnerships, helping local ideas gain wider visibility while keeping the state rooted in pride and authenticity.",
-    ],
-    voteCount: 11650,
-    publicVoteWeightPercent: 10,
-  },
-  {
-    id: "ifeoma-udoh",
-    name: "Ifeoma Udoh",
-    lga: "Uruan",
-    tagline: "Tourism advocate with a community-first approach",
-    photo:
-      "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80",
-    story: [
-      "Ifeoma Udoh has become a familiar voice for local tourism visibility, advocating for communities, artisans, and destinations that deserve more recognition.",
-      "Her work reflects a belief that tourism should bring tangible benefits to local life while preserving the character and values of each place.",
+      "Ikot Ekpene is celebrated as the Raffia City, and Edima Udoh carries that legacy into a new generation of designers.",
+      "Through her cooperative, more than forty young women now earn a living from traditional craft sold to visitors and boutiques across Nigeria.",
     ],
     voteCount: 9730,
     publicVoteWeightPercent: 10,
   },
   {
     id: "nse-udoh",
+    number: 4,
     name: "Nse Udoh",
-    lga: "Oron",
-    tagline: "Cultural curator and youth mentor",
-    photo:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80",
-    ],
+    lga: "Uruan",
+    tagline: "Youth educator and environmental volunteer",
+    photo: nse,
     story: [
-      "Nse Udoh has been active in youth culture programming, linking creative expression, identity, and regional pride in a way that speaks directly to the future of tourism and civic confidence.",
-      "Her work brings the richness of local culture into public conversation and helps position communities as active contributors to the state's story.",
+      "Nse Udoh teaches primary school pupils in Uruan and leads weekend clean-up drives along the riverbanks.",
+      "She believes tourism begins with pride in place, and designs lessons that connect children to the stories of their own communities.",
     ],
     voteCount: 8765,
     publicVoteWeightPercent: 10,
   },
   {
-    id: "eko-bassey",
-    name: "Eko Bassey",
-    lga: "Ibeno",
-    tagline: "Coastal experience promoter",
-    photo:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80",
+    id: "idara-bassey",
+    number: 5,
+    name: "Idara Bassey",
+    lga: "Oron",
+    tagline: "Maritime heritage storyteller",
+    photo: idara,
+    gallery: [groupShot],
     story: [
-      "Eko Bassey champions the unique appeal of the state's coastline, bringing attention to how natural beauty, local culture, and hospitality can work together to create a memorable destination identity.",
-      "His platform centers on desire, discovery, and destination value while remaining rooted in practical local partnerships and community benefit.",
+      "Idara Bassey is passionate about the Oron Museum's collections and the seafaring history of her people.",
+      "She hosts a popular community radio segment that retells local legends and invites listeners to visit the places behind them.",
     ],
     voteCount: 10980,
     publicVoteWeightPercent: 10,
   },
   {
     id: "patience-okon",
+    number: 6,
     name: "Patience Okon",
-    lga: "Etinan",
-    tagline: "Arts and heritage advocate",
-    photo:
-      "https://images.unsplash.com/photo-1521119989659-a83eee488004?auto=format&fit=crop&w=900&q=80",
+    lga: "Ibeno",
+    tagline: "Coastal conservation advocate",
+    photo: patience,
     story: [
-      "Patience Okon has become a strong voice for arts, storytelling, and community heritage, helping the state communicate its identity with warmth and confidence.",
-      "Her public work focuses on elevating local creatives and ensuring visitors understand the deeper stories behind the places they visit.",
+      "Patience Okon works with fishing families in Ibeno to protect the beaches that draw visitors to the state's coast.",
+      "Her campaigns pair conservation with small-business training so that tourism income stays within the community.",
     ],
     voteCount: 9420,
     publicVoteWeightPercent: 10,
   },
   {
-    id: "daniel-udo",
-    name: "Daniel Udo",
-    lga: "Mkpat Enin",
-    tagline: "Destination strategist and community connector",
-    photo:
-      "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
-    ],
-    story: [
-      "Daniel Udo has championed a more strategic view of tourism and economic opportunity, helping connect local communities to clearer pathways for growth and recognition.",
-      "His work focuses on practical partnerships and sustainable visibility that can help strengthen the state's profile across the region.",
-    ],
-    voteCount: 13320,
-    publicVoteWeightPercent: 10,
-  },
-  {
     id: "blessing-ikpe",
+    number: 7,
     name: "Blessing Ikpe",
-    lga: "Abak",
-    tagline: "Local enterprise leader",
-    photo:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80",
+    lga: "Etinan",
+    tagline: "Fashion designer reimagining Ibibio attire",
+    photo: blessing,
+    gallery: [stageShot],
     story: [
-      "Blessing Ikpe has been widely recognized for her role in promoting small business visibility, local pride, and destination narratives that celebrate community ownership.",
-      "Her leadership approach is rooted in practical action, making sure growing tourism opportunities remain tied to local benefit and cultural integrity.",
+      "Blessing Ikpe blends traditional beadwork and fabrics with contemporary cuts, showing Ibibio attire on runways well beyond the state.",
+      "She hopes the Mbopo platform will inspire more young designers to build careers at home.",
     ],
     voteCount: 9150,
     publicVoteWeightPercent: 10,
   },
   {
-    id: "kingsley-nsa",
-    name: "Kingsley Nsa",
-    lga: "Ikono",
-    tagline: "Sustainable tourism advocate",
-    photo:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
-    story: [
-      "Kingsley Nsa is committed to building a tourism story that is sustainable, community-led, and rooted in the authentic qualities that make Akwa Ibom distinct.",
-      "He believes destination branding should help local communities thrive while showcasing the state's natural beauty and cultural richness to the wider public.",
-    ],
-    voteCount: 10440,
-    publicVoteWeightPercent: 10,
-  },
-  {
     id: "victoria-okon",
+    number: 8,
     name: "Victoria Okon",
-    lga: "Nsit Ubium",
-    tagline: "Heritage custodian and public voice",
-    photo:
-      "https://images.unsplash.com/photo-1546961329-78bef0414d7c?auto=format&fit=crop&w=900&q=80",
+    lga: "Mkpat Enin",
+    tagline: "Dance and performing arts coach",
+    photo: victoria,
+    gallery: [groupShot],
     story: [
-      "Victoria Okon is known for her calm but compelling leadership style and her commitment to making local heritage and tourism narratives more visible.",
-      "Her work brings together respect for tradition and the energy needed to present the state as a destination with depth, texture, and opportunity.",
+      "Victoria Okon coaches a youth dance troupe that performs traditional Akwa Ibom dances at festivals and weddings.",
+      "She sees performance as a living archive, keeping rhythms and costumes alive for the next generation.",
     ],
     voteCount: 8890,
-    publicVoteWeightPercent: 10,
-  },
-  {
-    id: "uche-udofia",
-    name: "Uche Udofia",
-    lga: "Uyo",
-    tagline: "Public engagement and destination storytelling leader",
-    photo:
-      "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80",
-    ],
-    story: [
-      "Uche Udofia has made a mark through consistent community engagement and a strong belief that tourism should be both aspirational and deeply connected to local life.",
-      "By amplifying community voices and promoting locally grounded experiences, he continues to strengthen the state's appeal as a vibrant destination with room for growth.",
-    ],
-    voteCount: 12110,
     publicVoteWeightPercent: 10,
   },
 ];

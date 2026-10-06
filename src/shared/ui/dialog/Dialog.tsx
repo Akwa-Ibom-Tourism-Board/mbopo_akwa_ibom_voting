@@ -41,12 +41,8 @@ export const DialogContent = forwardRef<
 ));
 DialogContent.displayName = "DialogContent";
 
-export const DialogHeader = (props: HTMLAttributes<HTMLDivElement>) => (
-  <StyledHeader {...props} />
-);
-export const DialogFooter = (props: HTMLAttributes<HTMLDivElement>) => (
-  <StyledFooter {...props} />
-);
+export const DialogHeader = (props: HTMLAttributes<HTMLDivElement>) => <StyledHeader {...props} />;
+export const DialogFooter = (props: HTMLAttributes<HTMLDivElement>) => <StyledFooter {...props} />;
 
 export const DialogTitle = forwardRef<
   ElementRef<typeof DialogPrimitive.Title>,

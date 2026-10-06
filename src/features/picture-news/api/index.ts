@@ -9,9 +9,7 @@ export async function getPictureNewsList(): Promise<PictureNewsItem[]> {
   return [...MOCK_NEWS];
 }
 
-export async function getPictureNewsItem(
-  id: string,
-): Promise<PictureNewsItem | undefined> {
+export async function getPictureNewsItem(id: string): Promise<PictureNewsItem | undefined> {
   await delay(250);
   return MOCK_NEWS.find((item) => item.id === id);
 }

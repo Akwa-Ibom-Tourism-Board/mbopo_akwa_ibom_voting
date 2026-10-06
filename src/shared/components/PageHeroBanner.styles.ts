@@ -1,9 +1,8 @@
 import styled from "styled-components";
 
 export const BannerFrame = styled.div`
-  /* Clears the fixed Navbar's real measured height (see Navbar.tsx) plus
-     breathing room, instead of a guessed pixel value that drifts out of
-     sync on small screens where the disclaimer strip wraps to 2 lines. */
+  /* Clears the fixed Navbar (--site-header-height, set in
+     app/providers.tsx) plus breathing room. */
   padding: calc(var(--site-header-height) + 24px) 0 48px;
   background: ${({ theme }) => theme.gradients.panel};
   color: ${({ theme }) => theme.colors.white};
@@ -30,7 +29,11 @@ export const BannerTitle = styled.h1`
 export const BannerSubtitle = styled.p`
   max-width: 520px;
   margin: 14px auto 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${({ theme }) => theme.alpha(theme.colors.white, 0.8)};
   font-size: 14px;
   line-height: 1.7;
+`;
+
+export const BannerExtra = styled.div`
+  margin-top: 24px;
 `;

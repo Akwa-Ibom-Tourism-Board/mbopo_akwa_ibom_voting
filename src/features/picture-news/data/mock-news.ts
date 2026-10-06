@@ -1,4 +1,10 @@
 import type { PictureNewsItem } from "@/features/picture-news/types";
+import heroBg from "@/assets/hero-bg.webp";
+import woman6 from "@/assets/woman_6.webp";
+import woman5 from "@/assets/woman_5.webp";
+import stage from "@/assets/mbopo-hero-1.webp";
+import woman3 from "@/assets/woman_3.webp";
+import woman1 from "@/assets/woman_1.webp";
 
 export const MOCK_NEWS: PictureNewsItem[] = [
   {
@@ -6,12 +12,8 @@ export const MOCK_NEWS: PictureNewsItem[] = [
     title: "Mbopo Festival returns with a brighter, bolder showcase",
     summary:
       "Akwa Ibom's cultural and tourism experience takes center stage once more as communities, artisans, and investors unite around the next wave of heritage revival.",
-    coverImage:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80",
-    ],
+    coverImage: heroBg,
+    images: [woman6, woman5],
     body: [
       "The Mbopo Akwa Ibom experience is back with renewed energy, spotlighting the state's rich cultural heritage, hospitality, and creative economy.",
       "Stakeholders from the tourism, hospitality, and creative sectors have been working together to create a more immersive platform that not only celebrates culture but also connects visitors to authentic local experiences.",
@@ -42,8 +44,7 @@ export const MOCK_NEWS: PictureNewsItem[] = [
     title: "Akwa Ibom artisans are turning heritage into opportunity",
     summary:
       "Community-driven enterprise is building momentum as local makers share the stories behind their crafts, fabrics, and culinary traditions.",
-    coverImage:
-      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80",
+    coverImage: stage,
     body: [
       "The state's artisan communities continue to be a cornerstone of the tourism story, creating experiences that are both visually rich and materially rooted in local identities.",
       "Small producers are combining age-old craftsmanship with contemporary presentation, giving visitors the chance to appreciate the value of Akwa Ibom's heritage while also supporting local livelihoods.",
@@ -55,8 +56,7 @@ export const MOCK_NEWS: PictureNewsItem[] = [
     title: "Film, fashion, and culture are shaping the next tourism chapter",
     summary:
       "Creative storytelling is emerging as a key strategy in drawing attention to the state's landscapes, talent, and cultural narratives.",
-    coverImage:
-      "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80",
+    coverImage: woman3,
     body: [
       "Across the state, a new generation of creatives is using media and storytelling to connect urban audiences with the beauty and promise of local communities.",
       "The intersection of film, fashion, and cultural events is turning tourism into a more dynamic and translatable experience — one that visitors can remember and share.",
@@ -81,8 +81,7 @@ export const MOCK_NEWS: PictureNewsItem[] = [
     title: "Community tourism is giving more towns a voice on the map",
     summary:
       "Smaller communities are becoming focal points for cultural exchange and destination-building across the state.",
-    coverImage:
-      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
+    coverImage: woman1,
     body: [
       "Community-led tourism initiatives are turning local stories, food traditions, and neighborhood hospitality into meaningful visitor experiences.",
       "Their growth matters because it allows more communities to benefit from the broader tourism economy while preserving the authenticity that makes the destination distinct.",

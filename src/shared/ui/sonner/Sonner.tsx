@@ -22,5 +22,3 @@ export const Toaster = (props: ToasterProps) => {
     />
   );
 };
-
-export { toast } from "sonner";

@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  type ComponentPropsWithoutRef,
-  type ElementRef,
-} from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import {
@@ -26,12 +22,7 @@ export const SelectTrigger = forwardRef<
     invalid?: boolean;
   }
 >(({ children, invalid = false, ...props }, ref) => (
-  <StyledTrigger
-    ref={ref}
-    $invalid={invalid}
-    aria-invalid={invalid || undefined}
-    {...props}
-  >
+  <StyledTrigger ref={ref} $invalid={invalid} aria-invalid={invalid || undefined} {...props}>
     {children}
     <SelectPrimitive.Icon asChild>
       <ChevronDown size={16} />
