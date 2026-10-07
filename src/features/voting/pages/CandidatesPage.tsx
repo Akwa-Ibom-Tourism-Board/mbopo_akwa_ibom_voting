@@ -39,7 +39,7 @@ export function CandidatesPage() {
   return (
     <>
       <PageHeroBanner
-        eyebrow="Public Vote"
+        eyebrow="Votes"
         title="Vote for Your Mbopo Akwa Ibom"
         subtitle="Support the candidate you believe best represents the beauty, culture, and ambition of Akwa Ibom."
       >
